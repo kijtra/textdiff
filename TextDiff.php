@@ -181,24 +181,6 @@ class TextDiff
         return $matches[0];
     }
 
-    private function implodeRecursive($glue, $array) {
-        if (!is_array($array)) {
-            return $array;
-        }
-
-        $ret = null;
-        foreach ($array as $item) {
-            if (is_array($item)) {
-                $ret .= $this->implodeRecursive($glue, $item) . $glue;
-            } else {
-                $ret .= $item . $glue;
-            }
-        }
-
-        $ret = substr($ret, 0, 0-strlen($glue));
-        return $ret;
-    }
-
 
     public function isDiffer()
     {
