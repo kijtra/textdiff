@@ -27,7 +27,7 @@ class TextDiff
         $max = $old_max = $new_max = 0;
         foreach($old as $old_key => $old_value) {
             foreach(array_keys($new, $old_value) as $new_key) {
-                if (isset($matrix[$old_key - 1][$new_key - 1])) {
+                if (!empty($matrix[$old_key - 1][$new_key - 1])) {
                     $matrix[$old_key][$new_key] = $matrix[$old_key - 1][$new_key - 1] + 1;
                 } else {
                     $matrix[$old_key][$new_key] = 1;
@@ -69,18 +69,22 @@ class TextDiff
 
         $line_diff = $this->getLineDiff($this->old, $this->new);
 
+        // ダミー行を除去
+        $line_diff = array_filter($line_diff, function($val){return (false !== $val);});
+        $line_diff = array_values($line_diff);
+
         $lines = array();
         $line_count = 1;
         foreach($line_diff as $line) {
             if (is_array($line) && array_key_exists('change', $line)) {
                 $this->is_differ = true;
-
+                $words = $this->getWordDiff($line['source'], $line['change']);
                 $lines[$line_count] = array(
                     'line' => $line_count,
                     'differ' => true,
                     'source' => implode('', $line['source']),
                     'change' => implode('', $line['change']),
-                    'words' => $this->getWordDiff($line['source'], $line['change']),
+                    'words' => $words,
                 );
 
                 ++$line_count;
@@ -88,7 +92,9 @@ class TextDiff
                 $lines[$line_count] = array(
                     'line' => $line_count,
                     'differ' => false,
-                    'text' => $line,
+                    'source' => $line,
+                    'change' => $line,
+                    'words' => null
                 );
 
                 ++$line_count;
@@ -103,8 +109,19 @@ class TextDiff
         $old = str_replace("\r\n", "\n", $old);
         $new = str_replace("\r\n", "\n", $new);
 
-        $old_lines = explode("\n", $old);
-        $new_lines = explode("\n", $new);
+        // 差異の行が続くと別の行にならない場合があるため、
+        // 各行の後にダミー行（false）を入れる
+        $old_lines = array();
+        foreach(explode("\n", $old) as $val) {
+            $old_lines[] = $val;
+            $old_lines[] = false;
+        }
+
+        $new_lines = array();
+        foreach(explode("\n", $new) as $val) {
+            $new_lines[] = $val;
+            $new_lines[] = false;
+        }
 
         return $this->getDiffArray($old_lines, $new_lines);
     }
@@ -128,7 +145,7 @@ class TextDiff
                     ++$count;
                 } else {
                     $before = $count -1;
-                    if(array_key_exists($before, $words) && empty($words[$before]['source'])) {
+                    if(array_key_exists($before, $words) && !array_key_exists('source', $words[$before])) {
                         $words[$before] .= $val;
                     } else {
                         $words[] = $val;
@@ -164,6 +181,24 @@ class TextDiff
         return $matches[0];
     }
 
+    private function implodeRecursive($glue, $array) {
+        if (!is_array($array)) {
+            return $array;
+        }
+
+        $ret = null;
+        foreach ($array as $item) {
+            if (is_array($item)) {
+                $ret .= $this->implodeRecursive($glue, $item) . $glue;
+            } else {
+                $ret .= $item . $glue;
+            }
+        }
+
+        $ret = substr($ret, 0, 0-strlen($glue));
+        return $ret;
+    }
+
 
     public function isDiffer()
     {
@@ -191,10 +226,14 @@ class TextDiff
         $source = '<table class="differ -differ-table -differ-source">';
         $change = '<table class="differ -differ-table -differ-change">';
         foreach($this->data as $line) {
-            if (!$line['differ']) {
+            if (empty($line['line'])) {
+                continue;
+            }
+
+            if (empty($line['differ'])) {
                 $html = '<tr class="-line -no-differ">';
                 $html .= '<td class="-number">'.$line['line'].'</td>';
-                $html .= '<td class="-text">'.(empty($line['text']) ? '&nbsp;' : $line['text']).'</td>';
+                $html .= '<td class="-text">'.(empty($line['source']) ? '&nbsp;' : $line['source']).'</td>';
                 $source .= $html;
                 $change .= $html;
             } else {
@@ -253,7 +292,7 @@ class TextDiff
         foreach($this->data as $line) {
             if (!$line['differ']) {
                 $html = '<li class="-line -no-differ">';
-                $html .= '<div class="-text">'.(empty($line['text']) ? '&nbsp;' : $line['text']).'</div>';
+                $html .= '<div class="-text">'.(empty($line['source']) ? '&nbsp;' : $line['source']).'</div>';
                 $source .= $html;
                 $change .= $html;
             } else {
