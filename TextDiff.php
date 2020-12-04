@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Copyright (c) 2020 kijtra
+ * MIT license
+ * https://github.com/kijtra/textdiff
+ */
 class TextDiff
 {
     private static $word_reg = null;
