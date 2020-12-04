@@ -23,3 +23,6 @@ $data = $diff->getData();
 // Get HTML data (use table tag)
 $html = $diff->getHtml();
 ```
+
+## License
+MIT
