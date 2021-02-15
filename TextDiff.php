@@ -149,7 +149,7 @@ class TextDiff
                     ++$count;
                 } else {
                     $before = $count -1;
-                    if(array_key_exists($before, $words) && !array_key_exists('source', $words[$before])) {
+                    if(array_key_exists($before, $words) && is_array($words[$before]) && !array_key_exists('source', $words[$before])) {
                         $words[$before] .= $val;
                     } else {
                         $words[] = $val;
