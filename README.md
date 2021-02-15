@@ -25,4 +25,44 @@ $html = $diff->getHtml();
 ```
 
 ## License
+
 MIT
+
+## ChangeLog
+
+### v2.0.0
+
+- とりあえず PHP5.6 以上対応とする
+- **名前空間追加**
+  ```
+  <?php>
+  include('TextDiff.php');
+  $diff = new TextDiff($text1, $text2);
+  ```
+  ↓↓↓
+  ```
+  <?php
+  use Kijtra\TextDiff\TextDiff;
+  $diff = new TextDiff($text1, $text2);
+  ```
+- Composer 対応
+- ヘルパー関数追加
+
+  ```
+  <?php
+  // 配列で取得
+  $diff = text_diff($text1, $text2);
+
+  // HTMLで取得
+  $html = text_diff_html($text1, $text2);
+  ```
+
+- テスト作成
+
+### v1.0.1
+
+- Warning エラー検証追加（[#4](https://github.com/kijtra/textdiff/pull/4)）
+
+### v1.0.0
+
+- 初回公開
