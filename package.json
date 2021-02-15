@@ -1,0 +1,10 @@
+{
+    "private": true,
+    "scripts": {
+        "test": "vendor/bin/phpunit -c phpunit.xml"
+    },
+    "dependencies": {
+        "@prettier/plugin-php": "^0.16.1",
+        "prettier": "^2.2.1"
+    }
+}

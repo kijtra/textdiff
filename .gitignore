@@ -1,0 +1,13 @@
+/vendor
+/node_modules
+composer.phar
+composer.lock
+.DS_Store
+Thumbs.db
+/phpunit.xml
+/.idea
+/.vscode
+.phpunit.result.cache
+/package-lock.json
+/yarn.lock
+/yarn-error.log

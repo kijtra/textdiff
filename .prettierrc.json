@@ -1,0 +1,33 @@
+{
+    "endOfLine": "lf",
+    "tabWidth": 2,
+    "overrides": [
+        {
+            "files": ["*.js", "*.mjs", "*.vue"],
+            "options": {
+                "singleQuote": true,
+                "trailingComma": "es5"
+            }
+        },
+        {
+            "files": ["*.json"],
+            "options": {
+                "tabWidth": 4
+            }
+        },
+        {
+            "files": ["*.php"],
+            "options": {
+                "singleQuote": true,
+                "tabWidth": 4,
+                "printWidth": 80
+            }
+        },
+        {
+            "files": ["*.blade.php"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}
