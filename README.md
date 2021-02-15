@@ -9,7 +9,7 @@ Simple Text Diff PHP class.
 
 ```php
 <?php
-include('TextDiff.php');
+use Kijtra\TextDiff\TextDiff;
 
 $old_text = "abcg efgh ijk";
 
