@@ -30,17 +30,23 @@ MIT
 
 ## ChangeLog
 
+### v2.1.1
+
+- README 編集
+- 旧ファイルパスを維持
+- `index.php` のファイル名を `example.php` に変更
+
 ### v2.0.0
 
 - とりあえず PHP5.6 以上対応とする
 - **名前空間追加**
-  ```
-  <?php>
+  ```php
+  <?php
   include('TextDiff.php');
   $diff = new TextDiff($text1, $text2);
   ```
   ↓↓↓
-  ```
+  ```php
   <?php
   use Kijtra\TextDiff\TextDiff;
   $diff = new TextDiff($text1, $text2);
@@ -48,7 +54,7 @@ MIT
 - Composer 対応
 - ヘルパー関数追加
 
-  ```
+  ```php
   <?php
   // 配列で取得
   $diff = text_diff($text1, $text2);
